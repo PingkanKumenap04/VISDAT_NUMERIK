@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Patricia Pingkan Kumenap" />
+
+<meta name="date" content="2025-03-15" />
+
+<title>Visualisasi data Numerik</title>
+
+<script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">My Website</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Visualisasi data Numerik</h1>
+<h4 class="author">Patricia Pingkan Kumenap</h4>
+<h4 class="date">2025-03-15</h4>
+
+</div>
+
+
+<div id="histogram" class="section level2">
+<h2>HISTOGRAM</h2>
+<p>Untuk membuat histogram, data yang dipilih adalah data “gapminder”.
+Data ini merupakan bagian dari dataset yang bersumber dari packages R
+Studio dengan judul Packages “gapminder”. Untuk itu terlebih dahulu
+melakukan install.packages “gapminder” pada R Studio. Secara keseluruhan
+dataset gapminder ini membahas mengenai informasi tentang perkembangan
+ekonomi dan kesehatan dari berbagai negara di dunia selama beberapa
+dekade. Packages Dataset ini pertama kali dibuat oleh Jenny Bryan.
+Sumber data aslinya dikumpulkan oleh Gapminder Foundation. Dataset
+“gapminder” ini juga terdiri dari 6 variabel utama yang meliputi : -
+variabel country dengan tipe data faktor - variabel continent dengan
+tipe data faktor - variabel year dengan tipe data integer - variabel
+lifeExp dengan tipe data numerik - variabel pop dengan tipe data numerik
+- variabel gdpPercap dengan tipe data numerik</p>
+<p>Untuk membuat histogram pada package {ggplot2} menggunakan perintah
+<code>geom_histogram()</code>. Variable yang digunakan yaitu lifeExp
+pada data gapminder.</p>
+<pre class="r"><code>library(gapminder)</code></pre>
+<pre><code>## Warning: package &#39;gapminder&#39; was built under R version 4.3.3</code></pre>
+<pre class="r"><code>library(ggplot2)</code></pre>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 4.3.2</code></pre>
+<pre class="r"><code>ggplot(data = gapminder, mapping = aes(x = lifeExp)) + 
+  geom_histogram()</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="indexNUMERIK_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>Secara defaut, <code>geom_histogram()</code> menggunakan 30 bins
+(batang). Selanjutnya mengganti nilai bins tersebut dengan menambahkan
+argumen bins = 50. Hasilnya sebagai berikut.</p>
+<pre class="r"><code>ggplot(data = gapminder, mapping = aes(x = lifeExp)) + 
+  geom_histogram(bins=50)</code></pre>
+<p><img src="indexNUMERIK_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>Kita dapat memberikan pemisah dengan warna putih Anda dapat tambahkan
+argumen <code>color = "yellow"</code>. Hasilnya sebagai berikut.</p>
+<pre class="r"><code>ggplot(data = gapminder, mapping = aes(x = lifeExp)) + 
+  geom_histogram(bins=50, color=&quot;yellow&quot;)</code></pre>
+<p><img src="indexNUMERIK_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>Kita dapat mengubah warna batang dengan menggunakan argumen
+<code>fill</code>, mengubah format penulisan nilai pada sumbu x dan y
+menggunakan function <code>scale_x_continuous()</code> untuk sumbu x dan
+<code>scale_y_continuous()</code> untuk sumbu y dan mengubah nama label
+pada sumbu x dan y dengan fungsi <code>labs</code>. Hasilnya sebagai
+berikut.</p>
+<pre class="r"><code>library(scales)</code></pre>
+<pre><code>## Warning: package &#39;scales&#39; was built under R version 4.3.2</code></pre>
+<pre class="r"><code>ggplot(data = gapminder, mapping = aes(x = lifeExp)) + 
+  geom_histogram(bins = 30, color = &quot;blue&quot;, fill = &quot;pink&quot;) + 
+  scale_x_continuous(labels = comma) + 
+  scale_y_continuous(labels = comma) + 
+  labs(x = &quot;Rata-rata harapan hidup saat lahir (dalam tahun)&quot;, 
+       y = &quot;Frekuensi&quot;)</code></pre>
+<p><img src="indexNUMERIK_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+<div id="density-plot-sederhana" class="section level2">
+<h2>DENSITY PLOT SEDERHANA</h2>
+<p>Pada dasarnya density tidak bisa melihat outlier, untuk itu
+identifikasi outlier dapat menggunakan histogram dan Untuk membuat
+density plot menggunakan ggplot2 kita cukup menggunakan function
+geom_density()</p>
+<pre class="r"><code>ggplot(data = gapminder, mapping = aes(x = lifeExp)) + 
+  geom_density()</code></pre>
+<p><img src="indexNUMERIK_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>Untuk mengatur warna, transaparansi, format penulisan nilai pada
+sumbu x dan y, dan labeling sumbu x sama seperti pembuatan Histogram.
+Hasilnya sebagai berikut.</p>
+<pre class="r"><code>ggplot(data = gapminder, mapping = aes(x = lifeExp)) + 
+  geom_density(fill = &quot;pink&quot;, alpha = 0.9) + 
+  scale_x_continuous(labels = comma) + 
+  scale_y_continuous(labels = comma) + 
+  labs(x = &quot;Rata-rata harapan hidup saat lahir (dalam tahun)&quot;)</code></pre>
+<p><img src="indexNUMERIK_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>Kita dapat membandingkan sebaran menggunakan <strong>density
+plot</strong> berdasarkan kategori. Misal akan dilihat sebaran rata-rata
+hidup saat lahir berdasarkan kategori continent. Hasilnya sebagai
+berikut.</p>
+<pre class="r"><code>library(ggplot2)
+library(scales)  
+
+ggplot(data = gapminder, mapping = aes(x = lifeExp, fill = continent)) + 
+  geom_density(alpha = 0.7, color=&quot;black&quot;) + 
+  scale_x_continuous(labels = comma) + 
+  scale_y_continuous(labels = comma) + 
+  labs(
+    title = &quot;Distribusi Rata-rata harapan hidup saat lahir (dalam tahun) berdasarkan Negara&quot;,
+    x = &quot;Rata-rata harapan hidup saat lahir (dalam tahun)&quot;,
+    y = &quot;Density&quot;) + 
+  theme_minimal()</code></pre>
+<p><img src="indexNUMERIK_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>Untuk mengurangi kesulitan dalam mengamati visual tersebut maka perlu
+dipisah per kategori dengan menggunakan visualisasi <strong>ridgeline
+plot</strong> atau disebut juga <strong>joyplot</strong>.</p>
+<pre class="r"><code>library(ggridges)</code></pre>
+<pre><code>## Warning: package &#39;ggridges&#39; was built under R version 4.3.3</code></pre>
+<pre class="r"><code>ggplot(data = gapminder, mapping = aes(x = lifeExp, y=continent,fill = continent)) + 
+  geom_density_ridges() + 
+  labs(x = &quot;Rata-rata harapan hidup saat lahir (dalam tahun)&quot;, y = &quot;Kategori continent&quot;)</code></pre>
+<pre><code>## Picking joint bandwidth of 2.23</code></pre>
+<p><img src="indexNUMERIK_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+<div id="boxplot" class="section level2">
+<h2>BOXPLOT</h2>
+<p>Untuk membuat <strong>boxplot</strong> di ggplot2 kita dapat gunakan
+function <code>geom_boxplot()</code></p>
+<pre class="r"><code>ggplot(data = gapminder, mapping = aes(x = lifeExp)) + 
+  geom_boxplot()</code></pre>
+<p><img src="indexNUMERIK_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>Membuat boxplot secara vertikal menggunakan perintah
+<code>coord_flip()</code>. Hasilnya sebagai berikut.</p>
+<pre class="r"><code>ggplot(data = gapminder, mapping = aes(x = lifeExp)) + 
+  geom_boxplot()+
+  coord_flip()</code></pre>
+<p><img src="indexNUMERIK_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>kita dapat membuat boxplot dari data numerik dan membandingkan
+sebarannya berdasarkan kategori. Misalnya kita ingin membandingkan
+sebaran rata rata hidup saat lahir berdasarkan kategori kelas continent
+nya Hasilnya sebagai berikut.</p>
+<pre class="r"><code>ggplot(data = gapminder, mapping = aes(x = lifeExp, y = continent)) + 
+  geom_boxplot()</code></pre>
+<p><img src="indexNUMERIK_files/figure-html/unnamed-chunk-11-1.png" width="672" />
+semakin panjang maka akan semakin beragam variasinya Selanjutnya memberi
+warna berbeda untuk setiap box berdasarkan kategorinya. Kita dapat
+menambahkan argumen <code>fill</code> dengan nilai berupa nama variabel
+dari kategori yang ingin kita gunakan untuk perbandingan boxplot.
+Misalnya kita ingin membandingkan sebaran dari rata rata hidup saat
+lahir (lifeExp) berdasarkan kategori continent menggunakan
+<strong>boxplot</strong> dan menyesuaikan warnanya berdasarkan kategori
+dari <em>color</em>. Hasilnya sebagai berikut.</p>
+<pre class="r"><code>ggplot(data = gapminder, mapping = aes(x = lifeExp, y = continent, fill = continent)) + 
+  geom_boxplot()</code></pre>
+<p><img src="indexNUMERIK_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>Untuk menghilangkan legend dari color kita dapat tambahkan
+theme(legend.position = “none”).Hasilnya sebagai berikut.</p>
+<pre class="r"><code>ggplot(data = gapminder, mapping = aes(x = lifeExp, y = continent, fill = continent)) + 
+  geom_boxplot() + 
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="indexNUMERIK_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+</div>
+<div id="violin-plot" class="section level2">
+<h2>VIOLIN PLOT</h2>
+<p>Plot ini dibentuk dengan menggabungkan antara <strong>Density
+Plot</strong> dengan <strong>boxplot</strong>. Hasilnya sebagai
+berikut.</p>
+<pre class="r"><code>ggplot(data = gapminder, mapping = aes(x = lifeExp ,y=&quot;all&quot;)) +
+  geom_violin(fill=&quot;green&quot;,alpha=0.6) +
+  geom_boxplot(fill=&quot;pink&quot;,width=0.3)+
+   scale_x_continuous(labels = comma)</code></pre>
+<p><img src="indexNUMERIK_files/figure-html/unnamed-chunk-14-1.png" width="672" />
+y=all : harus ada y nya</p>
+</div>
+<div id="qq-plot" class="section level2">
+<h2>QQ-PLOT</h2>
+<p>Plot ini berguna untuk memeriksa apakah sebaran data (sebaran
+empirik) memiliki bentuk yang sama dengan sebaran tertentu yang
+dispesifikan (sebaran hipotetik). Misalnya kita ingin melihat pola
+sebaran rata-rata hidup saat lahir (lifeExp) apakah menyebar normal atau
+tidak.</p>
+<pre class="r"><code>ggplot(data = gapminder, aes(sample = lifeExp)) +
+  stat_qq(col=&quot;skyblue&quot;, cex=0.9) +
+  stat_qq_line(col=&quot;green&quot;, lwd=1)</code></pre>
+<p><img src="indexNUMERIK_files/figure-html/unnamed-chunk-15-1.png" width="672" />
+stat_qq_line : apakah menyebar normal atau tidak Jika datanya berhimpit
+atau mengikuti garis maka akan menyerupai sebaran normal</p>
+</div>
+<div id="scatter-plot" class="section level2">
+<h2>SCATTER PLOT</h2>
+<p>Untuk membuat scatter plot menggunakan <code>ggplot2</code> kita
+dapat menggunakan <code>geom_point()</code>. Misalnya kita ingin melihat
+pola sebaran antara gdpPercap dengan lifeExp</p>
+<pre class="r"><code>library(ggplot2)
+ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point() </code></pre>
+<p><img src="indexNUMERIK_files/figure-html/unnamed-chunk-16-1.png" width="672" />
+Kita juga dapat memberikan warna untuk setiap titik. Misalnya warna
+masing-masing titik menyesuaikan dengan kategori pada variabel
+continent</p>
+<pre class="r"><code>ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp, color = continent)) + 
+  geom_point()</code></pre>
+<p><img src="indexNUMERIK_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+</div>
+<div id="line-chart" class="section level2">
+<h2>LINE CHART</h2>
+<p>Plot ini digunakan untuk melihat trend data berdasarkan perubahan
+waktu. Artinya pada <strong>Line Chart</strong> cocok untuk data-data
+deret waktu.</p>
+<div id="input-data" class="section level3">
+<h3>Input Data</h3>
+<p>Data yang digunakan yaitu data Pasar Saham Amerika Serikat dan
+Indikator Teknisnya.Adapun dataset ini bersumber dari website
+kaggle.</p>
+<pre class="r"><code>saham_AS &lt;- read.csv(&quot;C:/Users/Fanndry/Documents/AAPL.csv&quot;,sep = &quot;,&quot;)
+saham_AS$Date &lt;- as.Date(saham_AS$Date, format = &quot;%Y-%m-%d&quot;)
+head(saham_AS$Date)</code></pre>
+<pre><code>## [1] &quot;2005-10-17&quot; &quot;2005-10-18&quot; &quot;2005-10-19&quot; &quot;2005-10-20&quot; &quot;2005-10-21&quot;
+## [6] &quot;2005-10-24&quot;</code></pre>
+<pre class="r"><code>str(saham_AS)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    3732 obs. of  64 variables:
+##  $ Date            : Date, format: &quot;2005-10-17&quot; &quot;2005-10-18&quot; ...
+##  $ Open            : num  6.66 6.57 6.43 6.72 7.02 6.82 6.96 6.95 7.04 6.92 ...
+##  $ High            : num  6.69 6.66 6.78 6.97 7.03 7.01 7.02 7.11 7.04 6.97 ...
+##  $ Low             : num  6.5 6.44 6.32 6.71 6.83 6.8 6.87 6.9 6.84 6.69 ...
+##  $ Close.t.        : num  6.6 6.45 6.78 6.93 6.87 7.01 6.93 7.04 6.84 6.72 ...
+##  $ Volume          : int  154208600 152397000 252170800 339440500 199181500 152438300 116281900 157898300 102885300 192446800 ...
+##  $ SD20            : num  0.169 0.168 0.18 0.203 0.217 ...
+##  $ Upper_Band      : num  6.83 6.82 6.86 6.93 6.97 ...
+##  $ Lower_Band      : num  6.15 6.15 6.14 6.12 6.11 ...
+##  $ S_Close.t.1.    : num  6.67 6.6 6.45 6.78 6.93 6.87 7.01 6.93 7.04 6.84 ...
+##  $ S_Close.t.2.    : num  6.63 6.67 6.6 6.45 6.78 6.93 6.87 7.01 6.93 7.04 ...
+##  $ S_Close.t.3.    : num  6.08 6.63 6.67 6.6 6.45 6.78 6.93 6.87 7.01 6.93 ...
+##  $ S_Close.t.5.    : num  6.22 6.37 6.08 6.63 6.67 6.6 6.45 6.78 6.93 6.87 ...
+##  $ S_Open.t.1.     : num  6.67 6.66 6.57 6.43 6.72 7.02 6.82 6.96 6.95 7.04 ...
+##  $ MA5             : num  6.47 6.49 6.63 6.69 6.73 ...
+##  $ MA10            : num  6.44 6.43 6.45 6.51 6.56 ...
+##  $ MA20            : num  6.49 6.48 6.5 6.53 6.54 ...
+##  $ MA50            : num  6.1 6.12 6.15 6.18 6.21 ...
+##  $ MA200           : num  5.15 5.16 5.17 5.19 5.2 ...
+##  $ EMA10           : num  6.52 6.5 6.59 6.71 6.76 ...
+##  $ EMA20           : num  6.52 6.5 6.59 6.71 6.76 ...
+##  $ EMA50           : num  6.52 6.5 6.59 6.71 6.76 ...
+##  $ EMA100          : num  6.52 6.5 6.59 6.71 6.76 ...
+##  $ EMA200          : num  6.52 6.5 6.59 6.71 6.76 ...
+##  $ MACD            : num  0.108 0.0984 0.1161 0.1405 0.1533 ...
+##  $ MACD_EMA        : num  0.126 0.121 0.12 0.124 0.13 ...
+##  $ ATR             : num  0.227 0.226 0.243 0.244 0.241 ...
+##  $ ADX             : num  25.3 23.9 22.6 22.2 22.1 ...
+##  $ CCI             : num  1333 1333 1333 1333 1333 ...
+##  $ ROC             : num  -1.79 -2.86 3.99 8.62 8.53 ...
+##  $ RSI             : num  56.8 52.5 59.7 62.5 60.7 ...
+##  $ William.R       : num  -25 -41.3 -5.43 -3.77 -14.29 ...
+##  $ SO.K            : num  75 58.7 94.6 96.2 85.7 ...
+##  $ STD5            : num  0.0504 0.0521 0.047 0.0289 0.03 ...
+##  $ ForceIndex1     : num  -10794602 -22859550 83216364 50916075 -11950890 ...
+##  $ ForceIndex20    : num  15420860 -18287640 88259780 176509060 59754450 ...
+##  $ Date_col        : chr  &quot;2005-10-17&quot; &quot;2005-10-18&quot; &quot;2005-10-19&quot; &quot;2005-10-20&quot; ...
+##  $ Day             : int  17 18 19 20 21 24 25 26 27 28 ...
+##  $ DayofWeek       : int  0 1 2 3 4 0 1 2 3 4 ...
+##  $ DayofYear       : int  290 291 292 293 294 297 298 299 300 301 ...
+##  $ Week            : int  42 42 42 42 42 43 43 43 43 43 ...
+##  $ Is_month_end    : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ Is_month_start  : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ Is_quarter_end  : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ Is_quarter_start: int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ Is_year_end     : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ Is_year_start   : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ Is_leap_year    : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ Year            : int  2005 2005 2005 2005 2005 2005 2005 2005 2005 2005 ...
+##  $ Month           : int  10 10 10 10 10 10 10 10 10 10 ...
+##  $ QQQ_Close       : num  33.6 33.4 34.1 33.8 34 ...
+##  $ QQQ.t.1.        : num  33.5 33.6 33.4 34.1 33.8 ...
+##  $ QQQ.t.2.        : num  33.3 33.5 33.6 33.4 34.1 ...
+##  $ QQQ.t.5.        : num  33.6 33.4 33 33.3 33.5 ...
+##  $ QQQ_MA10        : num  33.7 33.6 33.6 33.6 33.6 ...
+##  $ QQQ_MA20        : num  34 34 34 33.9 33.9 ...
+##  $ QQQ_MA50        : num  34.3 34.2 34.2 34.2 34.2 ...
+##  $ SnP_Close       : num  1190 1178 1196 1178 1180 ...
+##  $ SnP.t.1..       : num  1187 1190 1178 1196 1178 ...
+##  $ SnP.t.5.        : num  1187 1185 1178 1177 1187 ...
+##  $ DJIA_Close      : num  10348 10285 10414 10281 10215 ...
+##  $ DJIA.t.1..      : num  10287 10348 10285 10414 10281 ...
+##  $ DJIA.t.5.       : num  10239 10253 10217 10217 10287 ...
+##  $ Close_forcast   : num  6.45 6.78 6.93 6.87 7.01 6.93 7.04 6.84 6.72 7.11 ...</code></pre>
+</div>
+<div id="line-chart-dasar" class="section level3">
+<h3>Line chart Dasar</h3>
+<p>Di line chart sumbu x nya harus date</p>
+<pre class="r"><code>library(ggplot2)
+
+ggplot(data = saham_AS, aes(x = Date, y = High)) +
+  geom_line() +
+  labs(
+    title = &quot;Pergerakan Harga Tertinggi Saham&quot;,
+    x = &quot;Tanggal&quot;,
+    y = &quot;Harga Tertinggi&quot;) </code></pre>
+<p><img src="indexNUMERIK_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+</div>
+<div id="area-plot" class="section level3">
+<h3>Area Plot</h3>
+<p>Untuk menambah estetika dapat dilakukan dengan mengarsir daerah di
+bawah plot deret waktu. Plot seperti ini disebut <strong>Area
+Plot</strong>. Hasilnya sebagai berikut.</p>
+<pre class="r"><code>ggplot(data = saham_AS, aes(x=Date,y=High)) +
+  geom_line(lwd=1.2, col=&quot;green&quot;) +
+  geom_area(fill=&quot;skyblue&quot;, alpha=0.3)</code></pre>
+<p><img src="indexNUMERIK_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<pre class="r"><code>  labs(x=&quot;tanggal&quot;, y=&quot;Harga Tertinggi&quot;)</code></pre>
+<pre><code>## $x
+## [1] &quot;tanggal&quot;
+## 
+## $y
+## [1] &quot;Harga Tertinggi&quot;
+## 
+## attr(,&quot;class&quot;)
+## [1] &quot;labels&quot;</code></pre>
+</div>
+<div id="multiple-line-chart" class="section level3">
+<h3>Multiple Line Chart</h3>
+<p>Pada plot ini dapat digunakan untuk membandingkan dan
+mengidentifikasi tren jangka pendek dan jangka panjang serta memberikan
+sinyal trading. MA50 merupakan rata-rata pergerakan harga saham selama
+50 hari terakhir. Sedangkan MA200 merupakan pergerakan harga jangka
+panjang (lebih stabil dan menggambarkan tren keseluruhan).</p>
+<pre class="r"><code>ggplot(data = saham_AS, aes(x=Date)) +
+  geom_line(aes(y=MA50), lwd=1.2, col=&quot;blue&quot;) +
+  geom_line(aes(y=MA200), lwd=1.2, col=&quot;red&quot;) +
+  labs(x=&quot;tanggal&quot;, x=&quot;Perkiraan Rata-Rata Pergerakan Harga Saham&quot;) </code></pre>
+<p><img src="indexNUMERIK_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p>Untuk menambahkan nama kelompok digunakan perintah berikut.</p>
+<pre class="r"><code>library(ggplot2)
+
+ggplot(data = saham_AS, aes(x = Date)) +
+  geom_line(aes(y = MA50), lwd = 1.2, col = &quot;purple&quot;) +
+  geom_line(aes(y = MA200), lwd = 1.2, col = &quot;blue&quot;) +
+  labs(
+    x = &quot;Tanggal&quot;,
+    y = &quot;Moving Average&quot;,
+    title = &quot;Perbandingan MA50 dan MA200&quot;
+  ) +
+  theme_minimal() +  # Tema lebih bersih
+  theme(
+    plot.title = element_text(hjust = 0.5),  # Pusatkan judul
+    axis.text.x = element_text(angle = 45, hjust = 1),  # Miringkan label sumbu X
+    plot.margin = margin(10, 20, 30, 10)  # Tambahkan margin lebih besar
+  ) +
+  coord_cartesian(clip = &quot;off&quot;) +  # Pastikan teks tidak terpotong
+  expand_limits(y = max(saham_AS$MA50, saham_AS$MA200) * 1.2) +  # Tambah ruang lebih besar
+  annotate(&quot;text&quot;, x = max(saham_AS$Date), y = max(saham_AS$MA50) * 1.15,
+           label = &quot;MA50&quot;, color = &quot;purple&quot;, size = 5, fontface = &quot;bold&quot;, hjust = -0.1) +
+  annotate(&quot;text&quot;, x = max(saham_AS$Date), y = max(saham_AS$MA200) * 1.15,
+           label = &quot;MA200&quot;, color = &quot;blue&quot;, size = 5, fontface = &quot;bold&quot;, hjust = -0.1)</code></pre>
+<p><img src="indexNUMERIK_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
